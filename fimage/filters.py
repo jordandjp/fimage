@@ -1,16 +1,12 @@
 """Filters."""
 
 
-from fimage.channels import Channels
+from fimage.image_array import ImageArray
 from fimage.ctransformations import Sepia, Contrast
 
 
 class Filter:
     @classmethod
-    def process(cls, channels: Channels) -> None:
+    def process(cls, image_array: ImageArray) -> None:
         for transformation in cls.transformations:
-            transformation.process(channels)
-
-
-class ContrastSepia(Filter):
-    transformations = [Contrast(50), Sepia(100)]
+            transformation.process(image_array)
