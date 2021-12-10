@@ -14,7 +14,7 @@ class ImageArray:
         self.R, self.G, self.B = new_array
 
     def get_current(self) -> np.ndarray:
-        """Return the array with the original shape and updated RGB values."""
+        """Return an array with the original shape and updated RGB values."""
         new_array = np.empty(self.original_array.shape, dtype=np.uint8)
         new_array[..., 0] = self.R
         new_array[..., 1] = self.G
