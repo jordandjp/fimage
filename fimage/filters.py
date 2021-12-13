@@ -2,7 +2,6 @@
 
 
 from fimage.image_array import ImageArray
-from fimage.ctransformations import Sepia, Contrast
 
 
 class Filter:
