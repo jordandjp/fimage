@@ -5,6 +5,7 @@ from fimage.image_array import ImageArray
 
 
 class FImage:
+    #TODO Docstring
     def __init__(self, img) -> None:
         self.img = Image.open(img)
         self.image_array = ImageArray(np.array(self.img))
