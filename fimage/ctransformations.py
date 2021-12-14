@@ -22,7 +22,7 @@ class FillColor(CTransformation):
         self.R = R
         self.G = G
         self.B = B
-        
+
     def process(self, image_array: ImageArray) -> None:
         image_array.R = self.R
         image_array.G = self.G
@@ -82,9 +82,11 @@ class Brightness(CTransformation):
         self.adjust = math.floor(255 * (adjust / 100))
 
     def process(self, image_array: ImageArray) -> None:
-        image_array.R += self.adjust
-        image_array.G += self.adjust
-        image_array.B += self.adjust
+        ndarray = image_array.get_current().astype(np.int16)
+        ndarray += self.adjust
+        image_array.R = ndarray[..., 0]
+        image_array.G = ndarray[..., 1]
+        image_array.B = ndarray[..., 2]
         image_array.constrain_channels()
 
 
@@ -156,7 +158,7 @@ class Hue(CTransformation):
         h = h / 100
         hsv[..., 0] = h
         # hsv2rgb function returns a float type with values ranging from 0 to 1
-        rgb = (hsv2rgb(hsv) * 255).astype(np.uint8) 
+        rgb = (hsv2rgb(hsv) * 255).astype(np.uint8)
         image_array.R = rgb[..., 0]
         image_array.G = rgb[..., 1]
         image_array.B = rgb[..., 2]
@@ -199,10 +201,12 @@ class Gamma(CTransformation):
 class Noise(CTransformation):
     def __init__(self, adjust: int = 1) -> None:
         self.adjust = abs(adjust) * 2.55
-    
+
     def process(self, image_array: ImageArray) -> None:
         # Generate a random array and sum it up with our current one
-        random_array = np.random.randint(-self.adjust, self.adjust, image_array.original_array.shape)
+        random_array = np.random.randint(
+            -self.adjust, self.adjust, image_array.original_array.shape
+        )
         ndarray = image_array.get_current()
         ndarray = ndarray + random_array
 
@@ -230,18 +234,18 @@ class Clip(CTransformation):
 
 class Channels(CTransformation):
     def __init__(self, channels: Dict = dict) -> None:
-        self.R = channels.get('R')
-        self.G = channels.get('G')
-        self.B  = channels.get('B')
+        self.R = channels.get("R")
+        self.G = channels.get("G")
+        self.B = channels.get("B")
 
         if self.R:
-            self.R /= 100 
-        
+            self.R /= 100
+
         if self.G:
-            self.G /= 100 
+            self.G /= 100
 
         if self.B:
-            self.B /= 100 
+            self.B /= 100
 
     def process(self, image_array: ImageArray) -> None:
         if self.R is not None:
@@ -249,7 +253,7 @@ class Channels(CTransformation):
                 image_array.R = image_array.R + (255 - image_array.R) * self.R
             else:
                 image_array.R = image_array.R + (255 - image_array.R) * abs(self.R)
-        
+
         if self.G is not None:
             if self.G > 0:
                 image_array.G = image_array.G + (255 - image_array.G) * self.G
@@ -275,17 +279,16 @@ class Curves(CTransformation):
 
     def clip(self, x: int) -> int:
         if x < 0:
-            return 0    
+            return 0
 
         if x > 255:
             return 255
 
         return x
 
-    
     def missing_values(self, curve: Dict) -> Dict:
         max_value = 256
-        
+
         if len(curve.keys()) < max_value:
             # Some values might be missed, we need to add them
             right_value = None
@@ -298,33 +301,41 @@ class Curves(CTransformation):
                         if i in curve.keys():
                             right_value = curve.get(i)
                             break
-                    
+
                     if left_value is not None and right_value is not None:
                         curve[index] = round((left_value + right_value) / 2)
-                    
+
                     if left_value is None:
                         curve[index] = right_value
 
                     if right_value is None:
                         curve[index] = left_value
-                    
-        return curve
 
+        return curve
 
     def calculate_bezier(self, granuality: int) -> Dict:
         result = dict()
-        
+
         for i in range(granuality):
             t = i / granuality
-            x = (1 - t) ** 3 * self.p0[0] + 3 * (1 - t) ** 2 * t * self.p1[0] + 3 * (1 - t) * t ** 2 * self.p2[0] + t ** 3 * self.p3[0]
-            y = (1 - t) ** 3 * self.p0[1] + 3 * (1 - t) ** 2 * t * self.p1[1] + 3 * (1 - t) * t ** 2 * self.p2[1] + t ** 3 * self.p3[1]
+            x = (
+                (1 - t) ** 3 * self.p0[0]
+                + 3 * (1 - t) ** 2 * t * self.p1[0]
+                + 3 * (1 - t) * t ** 2 * self.p2[0]
+                + t ** 3 * self.p3[0]
+            )
+            y = (
+                (1 - t) ** 3 * self.p0[1]
+                + 3 * (1 - t) ** 2 * t * self.p1[1]
+                + 3 * (1 - t) * t ** 2 * self.p2[1]
+                + t ** 3 * self.p3[1]
+            )
 
             result[round(x)] = round(self.clip(y))
 
         result = self.missing_values(result)
 
         return result
-    
 
     def process(self, image_array: ImageArray) -> None:
         # https://stackoverflow.com/a/16993364
