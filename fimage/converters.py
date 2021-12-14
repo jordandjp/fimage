@@ -20,14 +20,16 @@ def rgb2hsv(rgb: np.ndarray) -> np.ndarray:
 
     h = np.zeros_like(s)
 
-    np.putmask(h, max_array == r, ((g - b) / d) + np.where(g < b, 6, 0).astype(np.float32))
+    np.putmask(
+        h, max_array == r, ((g - b) / d) + np.where(g < b, 6, 0).astype(np.float32)
+    )
     np.putmask(h, max_array == g, (b - r) / d + 2)
     np.putmask(h, max_array == b, (r - g) / d + 4)
 
     h = h / 6
     return np.dstack([h, s, v])
-    
-    
+
+
 def hsv2rgb(hsv: np.ndarray) -> np.ndarray:
     input_shape = hsv.shape
     hsv = hsv.reshape(-1, 3)

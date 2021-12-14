@@ -102,7 +102,9 @@ class Saturation(CTransformation):
         max_array = np.repeat(max_array, 3).reshape(ndarray.shape)
 
         sat_array = np.where(
-            ndarray != max_array, ndarray + (max_array - ndarray) * self.adjust, ndarray
+            ndarray != max_array,
+            ndarray + (max_array - ndarray) * self.adjust,
+            ndarray,
         )
         image_array.R = sat_array[..., 0]
         image_array.G = sat_array[..., 1]
@@ -127,7 +129,9 @@ class Vibrance(CTransformation):
         amt_array = (((max_array - avg_array) * 2 / 255) * self.adjust) / 100
 
         vib_array = np.where(
-            ndarray != max_array, ndarray + (max_array - ndarray) * amt_array, ndarray
+            ndarray != max_array,
+            ndarray + (max_array - ndarray) * amt_array,
+            ndarray,
         )
         image_array.R = vib_array[..., 0]
         image_array.G = vib_array[..., 1]
@@ -138,7 +142,9 @@ class Vibrance(CTransformation):
 class Greyscale(CTransformation):
     def process(self, image_array: ImageArray) -> None:
         avg = (
-            (0.299 * image_array.R) + (0.587 * image_array.G) + (0.114 * image_array.B)
+            (0.299 * image_array.R)
+            + (0.587 * image_array.G)
+            + (0.114 * image_array.B)
         )
         image_array.R = avg
         image_array.G = avg
@@ -173,9 +179,15 @@ class Colorize(CTransformation):
         self.level = level
 
     def process(self, image_array: ImageArray) -> None:
-        image_array.R = image_array.R - (image_array.R - self.R) * (self.level / 100)
-        image_array.G = image_array.G - (image_array.G - self.G) * (self.level / 100)
-        image_array.B = image_array.B - (image_array.B - self.B) * (self.level / 100)
+        image_array.R = image_array.R - (image_array.R - self.R) * (
+            self.level / 100
+        )
+        image_array.G = image_array.G - (image_array.G - self.G) * (
+            self.level / 100
+        )
+        image_array.B = image_array.B - (image_array.B - self.B) * (
+            self.level / 100
+        )
         image_array.constrain_channels()
 
 
@@ -233,7 +245,7 @@ class Clip(CTransformation):
 
 
 class Channels(CTransformation):
-    def __init__(self, channels: Dict = dict) -> None:
+    def __init__(self, channels: Dict = {}) -> None:
         self.R = channels.get("R")
         self.G = channels.get("G")
         self.B = channels.get("B")
@@ -252,19 +264,25 @@ class Channels(CTransformation):
             if self.R > 0:
                 image_array.R = image_array.R + (255 - image_array.R) * self.R
             else:
-                image_array.R = image_array.R + (255 - image_array.R) * abs(self.R)
+                image_array.R = image_array.R + (255 - image_array.R) * abs(
+                    self.R
+                )
 
         if self.G is not None:
             if self.G > 0:
                 image_array.G = image_array.G + (255 - image_array.G) * self.G
             else:
-                image_array.G = image_array.G + (255 - image_array.G) * abs(self.G)
+                image_array.G = image_array.G + (255 - image_array.G) * abs(
+                    self.G
+                )
 
         if self.B is not None:
             if self.B > 0:
                 image_array.B = image_array.B + (255 - image_array.B) * self.B
             else:
-                image_array.B = image_array.B + (255 - image_array.B) * abs(self.B)
+                image_array.B = image_array.B + (255 - image_array.B) * abs(
+                    self.B
+                )
 
         image_array.constrain_channels()
 
@@ -342,7 +360,9 @@ class Curves(CTransformation):
         ndarray = image_array.get_current()
 
         u, inv = np.unique(ndarray, return_inverse=True)
-        ndarray = np.array([self.curve.get(x) for x in u])[inv].reshape(ndarray.shape)
+        ndarray = np.array([self.curve.get(x) for x in u])[inv].reshape(
+            ndarray.shape
+        )
 
         image_array.R = ndarray[..., 0]
         image_array.G = ndarray[..., 1]
