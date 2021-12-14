@@ -3,13 +3,11 @@
 
 import abc
 import math
-import random
 
 import numpy as np
 
 from fimage.image_array import ImageArray
-from skimage.color import hsv2rgb, rgb2hsv
-from fimage.converters import rgb2hsv
+from fimage.converters import rgb2hsv, hsv2rgb
 
 
 class CTransformation(abc.ABC):
@@ -23,7 +21,7 @@ class FillColor(CTransformation):
         self.R = R
         self.G = G
         self.B = B
-        
+
     def process(self, image_array: ImageArray) -> None:
         image_array.R = self.R
         image_array.G = self.G
@@ -157,7 +155,7 @@ class Hue(CTransformation):
         h = h / 100
         hsv[..., 0] = h
         # hsv2rgb function returns a float type with values ranging from 0 to 1
-        rgb = (hsv2rgb(hsv) * 255).astype(np.uint8) 
+        rgb = (hsv2rgb(hsv) * 255).astype(np.uint8)
         image_array.R = rgb[..., 0]
         image_array.G = rgb[..., 1]
         image_array.B = rgb[..., 2]
@@ -176,4 +174,3 @@ class Colorize(CTransformation):
         image_array.G = image_array.G - (image_array.G - self.G) * (self.level / 100)
         image_array.B = image_array.B - (image_array.B - self.B) * (self.level / 100)
         image_array.constrain_channels()
-
