@@ -245,7 +245,7 @@ class Clip(CTransformation):
 
 
 class Channels(CTransformation):
-    def __init__(self, channels: Dict = dict) -> None:
+    def __init__(self, channels: Dict = {}) -> None:
         self.R = channels.get("R")
         self.G = channels.get("G")
         self.B = channels.get("B")
