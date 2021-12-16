@@ -18,7 +18,7 @@ class CTransformation(abc.ABC):
 
 
 class FillColor(CTransformation):
-    def __init__(self, R, G, B) -> None:
+    def __init__(self, R: int, G: int, B: int) -> None:
         self.R = R
         self.G = G
         self.B = B
@@ -152,7 +152,7 @@ class Greyscale(CTransformation):
 
 
 class Hue(CTransformation):
-    def __init__(self, adjust) -> None:
+    def __init__(self, adjust: int = 0) -> None:
         self.adjust = abs(adjust)
 
     def process(self, image_array: ImageArray) -> None:
@@ -172,7 +172,7 @@ class Hue(CTransformation):
 
 
 class Colorize(CTransformation):
-    def __init__(self, R, G, B, level) -> None:
+    def __init__(self, R: int, G: int, B: int, level: int) -> None:
         self.R = R
         self.G = G
         self.B = B
@@ -377,3 +377,18 @@ class Exposure(CTransformation):
 
     def process(self, image_array: ImageArray) -> None:
         Curves((0, 0), self.p1, self.p2, (255, 255)).process(image_array)
+
+
+class Posterize(CTransformation):
+    def __init__(self, adjust) -> None:
+        self.num_areas = 256 / adjust
+        self.num_values = 255 / (adjust - 1)
+
+    def process(self, image_array: ImageArray) -> None:
+        ndarray = image_array.get_current()
+        ndarray = np.floor(ndarray / self.num_areas) * self.num_values
+
+        image_array.R = ndarray[..., 0]
+        image_array.G = ndarray[..., 1]
+        image_array.B = ndarray[..., 2]
+        image_array.constrain_channels()
