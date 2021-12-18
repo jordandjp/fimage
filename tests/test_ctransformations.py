@@ -1,5 +1,4 @@
 import numpy as np
-from fimage.image_array import ImageArray
 import pytest
 
 from fimage.ctransformations import (
@@ -10,6 +9,7 @@ from fimage.ctransformations import (
     Saturation,
     Sepia,
 )
+from fimage.image_array import ImageArray
 
 
 @pytest.fixture
