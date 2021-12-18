@@ -139,7 +139,7 @@ class Vibrance(CTransformation):
         image_array.constrain_channels()
 
 
-class Greyscale(CTransformation):
+class Grayscale(CTransformation):
     def process(self, image_array: ImageArray) -> None:
         avg = (
             (0.299 * image_array.R)

@@ -4,7 +4,7 @@ import numpy as np
 def rgb2hsv(rgb: np.ndarray) -> np.ndarray:
     axis = rgb.ndim - 1
 
-    rgb = rgb.astype(np.float32) / 255
+    rgb = rgb.astype(np.float64) / 255
     r = rgb[..., 0]
     g = rgb[..., 1]
     b = rgb[..., 2]
@@ -21,7 +21,9 @@ def rgb2hsv(rgb: np.ndarray) -> np.ndarray:
     h = np.zeros_like(s)
 
     np.putmask(
-        h, max_array == r, ((g - b) / d) + np.where(g < b, 6, 0).astype(np.float32)
+        h,
+        max_array == r,
+        ((g - b) / d) + np.where(g < b, 6, 0).astype(np.float64),
     )
     np.putmask(h, max_array == g, (b - r) / d + 2)
     np.putmask(h, max_array == b, (r - g) / d + 4)
@@ -43,7 +45,11 @@ def hsv2rgb(hsv: np.ndarray) -> np.ndarray:
     i = i % 6
 
     rgb = np.zeros_like(hsv)
-    v, t, p, q = v.reshape(-1, 1), t.reshape(-1, 1), p.reshape(-1, 1), q.reshape(-1, 1)
+    v = v.reshape(-1, 1)
+    t = t.reshape(-1, 1)
+    p = p.reshape(-1, 1)
+    q = q.reshape(-1, 1)
+
     rgb[i == 0] = np.hstack([v, t, p])[i == 0]
     rgb[i == 1] = np.hstack([q, v, p])[i == 1]
     rgb[i == 2] = np.hstack([p, v, t])[i == 2]

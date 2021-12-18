@@ -18,7 +18,7 @@ __all__ = [
     "Curves",
     "Exposure",
     "Gamma",
-    "Greyscale",
+    "Grayscale",
     "FillColor",
     "Hue",
     "Invert",
