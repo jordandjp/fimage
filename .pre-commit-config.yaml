@@ -21,7 +21,6 @@ repos:
     rev: master
     hooks:
       - id: commitizen
-        types: [python]
         stages: [commit-msg]
 
   - repo: local
