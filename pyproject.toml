@@ -29,6 +29,11 @@ name = "cz_conventional_commits"
 version = "0.0.1"
 tag_format = "$version"
 
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+]
+
 [tool.isort]
 profile = "black"
 

@@ -9,7 +9,7 @@ from fimage.ctransformations import (
     Curves,
     Exposure,
     Gamma,
-    Greyscale,
+    Grayscale,
     Posterize,
     Saturation,
     Vibrance,
@@ -53,5 +53,5 @@ class sinCity(Filter):
         Exposure(10),
         Posterize(80),
         Clip(30),
-        Greyscale(),
+        Grayscale(),
     ]

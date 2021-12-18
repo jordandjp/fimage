@@ -7,8 +7,8 @@ from typing import Dict, Tuple
 
 import numpy as np
 
+from fimage.converters import hsv2rgb, rgb2hsv
 from fimage.image_array import ImageArray
-from fimage.converters import rgb2hsv, hsv2rgb
 
 
 class CTransformation(abc.ABC):
@@ -139,12 +139,10 @@ class Vibrance(CTransformation):
         image_array.constrain_channels()
 
 
-class Greyscale(CTransformation):
+class Grayscale(CTransformation):
     def process(self, image_array: ImageArray) -> None:
         avg = (
-            (0.299 * image_array.R)
-            + (0.587 * image_array.G)
-            + (0.114 * image_array.B)
+            (0.299 * image_array.R) + (0.587 * image_array.G) + (0.114 * image_array.B)
         )
         image_array.R = avg
         image_array.G = avg
@@ -179,15 +177,9 @@ class Colorize(CTransformation):
         self.level = level
 
     def process(self, image_array: ImageArray) -> None:
-        image_array.R = image_array.R - (image_array.R - self.R) * (
-            self.level / 100
-        )
-        image_array.G = image_array.G - (image_array.G - self.G) * (
-            self.level / 100
-        )
-        image_array.B = image_array.B - (image_array.B - self.B) * (
-            self.level / 100
-        )
+        image_array.R = image_array.R - (image_array.R - self.R) * (self.level / 100)
+        image_array.G = image_array.G - (image_array.G - self.G) * (self.level / 100)
+        image_array.B = image_array.B - (image_array.B - self.B) * (self.level / 100)
         image_array.constrain_channels()
 
 
@@ -264,25 +256,19 @@ class Channels(CTransformation):
             if self.R > 0:
                 image_array.R = image_array.R + (255 - image_array.R) * self.R
             else:
-                image_array.R = image_array.R + (255 - image_array.R) * abs(
-                    self.R
-                )
+                image_array.R = image_array.R + (255 - image_array.R) * abs(self.R)
 
         if self.G is not None:
             if self.G > 0:
                 image_array.G = image_array.G + (255 - image_array.G) * self.G
             else:
-                image_array.G = image_array.G + (255 - image_array.G) * abs(
-                    self.G
-                )
+                image_array.G = image_array.G + (255 - image_array.G) * abs(self.G)
 
         if self.B is not None:
             if self.B > 0:
                 image_array.B = image_array.B + (255 - image_array.B) * self.B
             else:
-                image_array.B = image_array.B + (255 - image_array.B) * abs(
-                    self.B
-                )
+                image_array.B = image_array.B + (255 - image_array.B) * abs(self.B)
 
         image_array.constrain_channels()
 
@@ -360,9 +346,7 @@ class Curves(CTransformation):
         ndarray = image_array.get_current()
 
         u, inv = np.unique(ndarray, return_inverse=True)
-        ndarray = np.array([self.curve.get(x) for x in u])[inv].reshape(
-            ndarray.shape
-        )
+        ndarray = np.array([self.curve.get(x) for x in u])[inv].reshape(ndarray.shape)
 
         image_array.R = ndarray[..., 0]
         image_array.G = ndarray[..., 1]
