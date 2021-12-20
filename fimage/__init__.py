@@ -1,6 +1,6 @@
 from .converters import hsv2rgb, rgb2hsv
-from .ctransformations import *
 from .filters import *
+from .presets import *
 from .fimage import FImage
 from .image_array import ImageArray
 
@@ -26,4 +26,7 @@ __all__ = [
     "Saturation",
     "Sepia",
     "Vibrance",
+    "Love",
+    "OrangePeel",
+    "SinCity",
 ]

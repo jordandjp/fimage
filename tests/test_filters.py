@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from fimage.ctransformations import (
+from fimage.filters import (
     Brightness,
     FillColor,
     Grayscale,
