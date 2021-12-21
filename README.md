@@ -43,11 +43,11 @@ python app.py
 
 This is `my_picture.jpg` before the filter was applied
 
-<img alt="my_picture.jpg" src="examples/img/my_picture.jpg" width="600" height="800">
+<img alt="my_picture.jpg" src="examples/img/my_picture.jpg" width="400" height="500">
 
 And this is how new image `my_picture_sepia.jpg` looks like after the filter was applied
 
-<img alt="my_picture_sepia.jpg" src="examples/img/my_picture_sepia.jpg" width="600" height="800">
+<img alt="my_picture_sepia.jpg" src="examples/img/my_picture_sepia.jpg" width="400" height="500">
 
 **Note**:  *90 represents the adjustment value we want to use for applying a sepia tone to this picture, lower values will result an image with less sepia tone while higher values will give us an image with a notorious sepia tone.*
 
@@ -57,7 +57,7 @@ Most of the filters **FImage** offers will need an adjustment value to be passed
 
 **FImage** offers more filters besides the Sepia one, even you can combine multiples filters to give a better look to your picture.
 
-Modify the file `app.py` to import more filters from FImage
+Modify the file `app.py` to import more filters from **FImage**
 
 ```python
 from fimage import FImage
@@ -90,7 +90,7 @@ python app.py
 
 And our new `my_picture_mixed.jpg` looks like
 
-<img alt="my_picture_mixed.jpg" src="examples/img/my_picture_mixed.jpg" width="600" height="800">
+<img alt="my_picture_mixed.jpg" src="examples/img/my_picture_mixed.jpg" width="400" height="500">
 
 The order in which the filters are passed to the `apply` function matters, this is because the filters are applied in a sequential manner, so the next filter will be applied over the resultant image from the previous one.
 
@@ -137,7 +137,7 @@ if __name__ == "__main__":
 
  After we run it, we get our new  `my_picture_sincity.jpg`
 
-<img alt="my_picture_sincity.jpg" src="examples/img/my_picture_sincity.jpg" width="600" height="800">
+<img alt="my_picture_sincity.jpg" src="examples/img/my_picture_sincity.jpg" width="400" height="500">
 
 Currently supported Presets:
 - **SinCity**
@@ -181,6 +181,6 @@ if __name__ == "__main__":
 
 The new `my_picture_custom.jpg`
 
-<img alt="my_picture_custom.jpg" src="examples/img/my_picture_custom.jpg" width="600" height="800">
+<img alt="my_picture_custom.jpg" src="examples/img/my_picture_custom.jpg" width="400" height="500">
 
 Now, in this way `MyOwnPreset` has the combination of filters you like and you can use to modify more pictures.
