@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fimage"
-version = "0.1.0"
+version = "0.1.5"
 description = "A Python module to create and apply filters to images."
 authors = ["Jordan Jimenez", "Juan Benitez <juanbenitezdev@gmail.com>"]
 license = "MIT"

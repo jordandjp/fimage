@@ -1,8 +1,8 @@
 from .converters import hsv2rgb, rgb2hsv
 from .filters import *
-from .presets import *
 from .fimage import FImage
 from .image_array import ImageArray
+from .presets import *
 
 __all__ = [
     "rgb2hsv",
