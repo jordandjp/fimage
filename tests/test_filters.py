@@ -1,14 +1,7 @@
 import numpy as np
 import pytest
 
-from fimage.filters import (
-    Brightness,
-    FillColor,
-    Grayscale,
-    Hue,
-    Saturation,
-    Sepia,
-)
+from fimage.filters import Brightness, FillColor, Grayscale, Hue, Saturation, Sepia
 from fimage.image_array import ImageArray
 
 
