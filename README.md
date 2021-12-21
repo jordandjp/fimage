@@ -2,7 +2,7 @@
 
 A Python module to apply and create multiples filters to images.
 
-You need to be using Python 3.6 or greater to be able to use **FImage**.
+You need to be using Python 3.7 or greater to be able to use **FImage**.
 
 ## Installation
 ```python
