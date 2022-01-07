@@ -14,7 +14,9 @@ def rgb2hsv(rgb: np.ndarray) -> np.ndarray:
 
     v = max_array
     d = max_array - min_array
-    d[d == 0] = 1
+
+    np.seterr(invalid="ignore")
+    d[d == 0] = 0
 
     s = np.where(max_array == 0, 0, d / max_array)
 
@@ -29,7 +31,12 @@ def rgb2hsv(rgb: np.ndarray) -> np.ndarray:
     np.putmask(h, max_array == b, (r - g) / d + 4)
 
     h = h / 6
-    return np.dstack([h, s, v])
+    hsv = np.empty_like(rgb)
+    hsv[..., 0] = h
+    hsv[..., 1] = s
+    hsv[..., 2] = v
+    hsv[np.isnan(hsv)] = 0
+    return hsv
 
 
 def hsv2rgb(hsv: np.ndarray) -> np.ndarray:

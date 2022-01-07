@@ -7,7 +7,6 @@ from fimage.image_array import ImageArray
 
 @pytest.fixture
 def initial_image_array():
-
     return ImageArray(
         np.array(
             [

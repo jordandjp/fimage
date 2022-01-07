@@ -117,9 +117,7 @@ class Vibrance(Filter):
         self.adjust = adjust * -1
 
     def process(self, image_array: ImageArray) -> None:
-        ndarray = image_array.get_current()
-        if image_array.has_alpha:
-            ndarray = np.delete(ndarray, 3, 2)
+        ndarray = image_array.get_current_rgb()
 
         axis = ndarray.ndim - 1
 
@@ -157,7 +155,8 @@ class Hue(Filter):
         self.adjust = abs(adjust)
 
     def process(self, image_array: ImageArray) -> None:
-        hsv = rgb2hsv(image_array.get_current())
+        ndarray = image_array.get_current_rgb()
+        hsv = rgb2hsv(ndarray)
         h = hsv[..., 0]
         h *= 100
         h += self.adjust
