@@ -117,7 +117,8 @@ class Vibrance(Filter):
         self.adjust = adjust * -1
 
     def process(self, image_array: ImageArray) -> None:
-        ndarray = image_array.get_current()
+        ndarray = image_array.get_current_rgb()
+
         axis = ndarray.ndim - 1
 
         max_array = ndarray.max(axis=axis)
@@ -142,9 +143,7 @@ class Vibrance(Filter):
 class Grayscale(Filter):
     def process(self, image_array: ImageArray) -> None:
         avg = (
-            (0.299 * image_array.R)
-            + (0.587 * image_array.G)
-            + (0.114 * image_array.B)
+            (0.299 * image_array.R) + (0.587 * image_array.G) + (0.114 * image_array.B)
         )
         image_array.R = avg
         image_array.G = avg
@@ -156,7 +155,8 @@ class Hue(Filter):
         self.adjust = abs(adjust)
 
     def process(self, image_array: ImageArray) -> None:
-        hsv = rgb2hsv(image_array.get_current())
+        ndarray = image_array.get_current_rgb()
+        hsv = rgb2hsv(ndarray)
         h = hsv[..., 0]
         h *= 100
         h += self.adjust
@@ -179,15 +179,9 @@ class Colorize(Filter):
         self.level = level
 
     def process(self, image_array: ImageArray) -> None:
-        image_array.R = image_array.R - (image_array.R - self.R) * (
-            self.level / 100
-        )
-        image_array.G = image_array.G - (image_array.G - self.G) * (
-            self.level / 100
-        )
-        image_array.B = image_array.B - (image_array.B - self.B) * (
-            self.level / 100
-        )
+        image_array.R = image_array.R - (image_array.R - self.R) * (self.level / 100)
+        image_array.G = image_array.G - (image_array.G - self.G) * (self.level / 100)
+        image_array.B = image_array.B - (image_array.B - self.B) * (self.level / 100)
         image_array.constrain_channels()
 
 
@@ -264,25 +258,19 @@ class Channels(Filter):
             if self.R > 0:
                 image_array.R = image_array.R + (255 - image_array.R) * self.R
             else:
-                image_array.R = image_array.R + (255 - image_array.R) * abs(
-                    self.R
-                )
+                image_array.R = image_array.R + (255 - image_array.R) * abs(self.R)
 
         if self.G is not None:
             if self.G > 0:
                 image_array.G = image_array.G + (255 - image_array.G) * self.G
             else:
-                image_array.G = image_array.G + (255 - image_array.G) * abs(
-                    self.G
-                )
+                image_array.G = image_array.G + (255 - image_array.G) * abs(self.G)
 
         if self.B is not None:
             if self.B > 0:
                 image_array.B = image_array.B + (255 - image_array.B) * self.B
             else:
-                image_array.B = image_array.B + (255 - image_array.B) * abs(
-                    self.B
-                )
+                image_array.B = image_array.B + (255 - image_array.B) * abs(self.B)
 
         image_array.constrain_channels()
 
@@ -360,9 +348,7 @@ class Curves(Filter):
         ndarray = image_array.get_current()
 
         u, inv = np.unique(ndarray, return_inverse=True)
-        ndarray = np.array([self.curve.get(x) for x in u])[inv].reshape(
-            ndarray.shape
-        )
+        ndarray = np.array([self.curve.get(x) for x in u])[inv].reshape(ndarray.shape)
 
         image_array.R = ndarray[..., 0]
         image_array.G = ndarray[..., 1]
