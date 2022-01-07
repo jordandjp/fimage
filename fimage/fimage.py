@@ -18,7 +18,7 @@ class FImage:
         self.image = self.ndarray_to_image()
 
     def ndarray_to_image(self):
-        return Image.fromarray(self.image_array.get_current(), "RGB")
+        return Image.fromarray(self.image_array.get_current(), self.image.mode)
 
     def save(self, *args, **kwargs):
         self.image.save(exif=self.exif_data, *args, **kwargs)

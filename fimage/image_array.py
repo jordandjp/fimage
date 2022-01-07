@@ -7,6 +7,14 @@ class ImageArray:
         self.R = self.original_array[..., 0]
         self.G = self.original_array[..., 1]
         self.B = self.original_array[..., 2]
+        self.A = None
+
+        if self.original_array.shape[-1] == 4:
+            self.A = self.original_array[..., 3]
+
+    @property
+    def has_alpha(self):
+        return True if self.A is not None else False
 
     def constrain_channels(self) -> None:
         new_array = np.array([self.R, self.G, self.B], dtype=np.int16)
@@ -19,4 +27,6 @@ class ImageArray:
         new_array[..., 0] = self.R
         new_array[..., 1] = self.G
         new_array[..., 2] = self.B
+        if self.has_alpha:
+            new_array[..., 3] = self.A
         return new_array
