@@ -157,7 +157,7 @@ from fimage.filters import Contrast, Brightness, Saturation
 
 # Create my custom preset and specify the filters to apply
 class MyOwnPreset(Preset):
-    transformations = [
+    filters = [
         Contrast(30),
         Saturation(50),
         Brightness(10),
