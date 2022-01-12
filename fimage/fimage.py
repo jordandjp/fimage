@@ -1,6 +1,7 @@
 import numpy as np
 from PIL import Image, ImageOps
 
+from fimage.class_register import ClassMapRegister
 from fimage.image_array import ImageArray
 
 
@@ -12,7 +13,11 @@ class FImage:
         self.exif_data = self.image.getexif()
         self.image_array = ImageArray(np.array(self.image))
 
-    def apply(self, *filters):
+    def apply(self, *filters, **kwargs_filters):
+        filters = list(filters)
+        for filter, value in kwargs_filters.items():
+            filters.append(ClassMapRegister.get_class(filter, value))
+
         for t in filters:
             t.process(self.image_array)
 

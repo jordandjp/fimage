@@ -1,6 +1,7 @@
 """Presets."""
 
 
+from fimage.class_register import ClassMapRegister
 from fimage.filters import (
     Brightness,
     Clip,
@@ -17,15 +18,15 @@ from fimage.filters import (
 from fimage.image_array import ImageArray
 
 
-class Preset:
+class Preset(ClassMapRegister):
     @classmethod
     def process(cls, image_array: ImageArray) -> None:
-        for transformation in cls.transformations:
-            transformation.process(image_array)
+        for filter_ in cls.filters:
+            filter_.process(image_array)
 
 
 class Love(Preset):
-    transformations = [
+    filters = [
         Brightness(5),
         Exposure(8),
         Contrast(4),
@@ -36,7 +37,7 @@ class Love(Preset):
 
 
 class OrangePeel(Preset):
-    transformations = [
+    filters = [
         Curves((0, 0), (100, 50), (140, 200), (255, 255)),
         Vibrance(-30),
         Saturation(-30),
@@ -47,7 +48,7 @@ class OrangePeel(Preset):
 
 
 class SinCity(Preset):
-    transformations = [
+    filters = [
         Contrast(100),
         Vibrance(15),
         Exposure(10),

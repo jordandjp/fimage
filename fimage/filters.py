@@ -1,20 +1,20 @@
 """Color filters."""
 
-
 import abc
 import math
 from typing import Dict, Tuple
 
 import numpy as np
 
+from fimage.class_register import ClassMapRegister
 from fimage.converters import hsv2rgb, rgb2hsv
 from fimage.image_array import ImageArray
 
 
-class Filter(abc.ABC):
+class Filter(abc.ABC, ClassMapRegister):
     @abc.abstractmethod
     def process(self, image_array: ImageArray) -> None:
-        pass
+        """"""
 
 
 class FillColor(Filter):
