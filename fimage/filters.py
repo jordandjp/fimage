@@ -195,7 +195,7 @@ class Invert(Filter):
 
 
 class Gamma(Filter):
-    def __init__(self, adjust: int = 1) -> None:
+    def __init__(self, adjust: float = 1.0) -> None:
         self.adjust = adjust
 
     def process(self, image_array: ImageArray) -> None:
@@ -211,9 +211,7 @@ class Noise(Filter):
 
     def process(self, image_array: ImageArray) -> None:
         # Generate a random array and sum it up with our current one
-        random_array = np.random.randint(
-            -self.adjust, self.adjust, image_array.original_array.shape
-        )
+        random_array = np.random.randint(-self.adjust, self.adjust, image_array.shape)
         ndarray = image_array.get_current()
         ndarray = ndarray + random_array
 

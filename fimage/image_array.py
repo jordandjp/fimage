@@ -3,14 +3,14 @@ import numpy as np
 
 class ImageArray:
     def __init__(self, ndarray: np.ndarray) -> None:
-        self.original_array = ndarray
-        self.R = self.original_array[..., 0]
-        self.G = self.original_array[..., 1]
-        self.B = self.original_array[..., 2]
+        self.shape = ndarray.shape
+        self.R = ndarray[..., 0]
+        self.G = ndarray[..., 1]
+        self.B = ndarray[..., 2]
         self.A = None
 
-        if self.original_array.shape[-1] == 4:
-            self.A = self.original_array[..., 3]
+        if self.shape[-1] == 4:
+            self.A = ndarray[..., 3]
 
     @property
     def has_alpha(self):
@@ -23,7 +23,7 @@ class ImageArray:
 
     def get_current(self) -> np.ndarray:
         """Return an array with the original shape and updated RGB(A) values."""
-        new_array = np.empty(self.original_array.shape, dtype=np.uint8)
+        new_array = np.empty(self.shape, dtype=np.uint8)
         new_array[..., 0] = self.R
         new_array[..., 1] = self.G
         new_array[..., 2] = self.B
@@ -33,7 +33,7 @@ class ImageArray:
 
     def get_current_rgb(self) -> np.ndarray:
         """Return an array with only RGB values."""
-        rgb_shape = self.original_array.shape[:-1] + (3,)
+        rgb_shape = self.shape[:-1] + (3,)
         new_array = np.empty(rgb_shape, dtype=np.uint8)
         new_array[..., 0] = self.R
         new_array[..., 1] = self.G
