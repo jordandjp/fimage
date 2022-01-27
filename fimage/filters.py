@@ -4,7 +4,6 @@ import abc
 import math
 from typing import Dict, Tuple
 
-import cv2
 import numpy as np
 
 from fimage.class_register import ClassMapRegister
@@ -96,7 +95,7 @@ class Saturation(Filter):
         self.adjust = adjust * -0.01
 
     def process(self, image_array: ImageArray) -> None:
-        ndarray = image_array.get_current()
+        ndarray = image_array.get_current_rgb()
         axis = ndarray.ndim - 1
 
         max_array = ndarray.max(axis=axis)
@@ -373,26 +372,6 @@ class Posterize(Filter):
         ndarray = image_array.get_current()
         ndarray = np.floor(ndarray / self.num_areas) * self.num_values
 
-        image_array.R = ndarray[..., 0]
-        image_array.G = ndarray[..., 1]
-        image_array.B = ndarray[..., 2]
-        image_array.constrain_channels()
-
-
-class Sharpen(Filter):
-    def __init__(self, adjust=100) -> None:
-        self.adjust = adjust / 100
-
-    def process(self, image_array: ImageArray) -> None:
-        ndarray = image_array.get_current()
-        sharpen_kernel = np.array(
-            [
-                [0, -self.adjust, 0],
-                [-self.adjust, 4 * self.adjust + 1, -self.adjust],
-                [0, -self.adjust, 0],
-            ]
-        )
-        ndarray = cv2.filter2D(ndarray, -1, sharpen_kernel)
         image_array.R = ndarray[..., 0]
         image_array.G = ndarray[..., 1]
         image_array.B = ndarray[..., 2]
